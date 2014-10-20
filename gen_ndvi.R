@@ -37,13 +37,10 @@
 library(sp)
 library(raster)
 library(rgdal)
-source('F:/China_Patent/XT_New/Script/small_tools.R')
 
 #--------------------------------------
 
 # Default inputs
-# imgFile <- '/projectnb/landsat/projects/ACRE/stacks/p002r067/images/LND0020672001315EDC00/LE70020672001315EDC00_stack'
-# outFile <- '/projectnb/landsat/users/xjtang/test.tif'
 redBand <- 3
 nirBand <- 4
 fmaskBand <- 8
@@ -113,41 +110,5 @@ gen_ndvi <- function(imgFile,outFile,redBand,nirBand,fmaskBand,maskValue){
   rm(ndviRas)
   
   # done
-  return(0)
-}
-
-#--------------------------------------
-# gen_ndvi
-# Generate NDVI layer based on a specific image stack
-#
-# Input Arguments: 
-#   img (String) - name of the file that we are generating ndvi from (name must contain image id)
-#
-# Output Arguments: 
-#   r (Integer) - 0: Successful
-#
-# Usage: 
-#   1.Customize the code based on your data structure
-#   2.Run the function with correct input arguments.
-#
-sid_gen_ndvi <- function(img){
-  
-  # gather inputs
-  dataDir <- '/projectnb/landsat/projects/ACRE/stacks/p002r067/'
-  sid <- paste('LND',substr(img,4,18))
-  imgFile <- paste(dataDir,sid,'/',img,'_stack',sep='')
-  outFile <- paste(dataDir,sid,'/',img,'_ndvi',sep='')
-  redBand <- 3
-  nirBand <- 4
-  fmaskBand <- 8
-  maskValue <- c(255,2,3,4)
-
-  # call gen_ndvi
-  cat('\n')
-  gen_ndvi(imgFile,outFile,redBand,nirBand,fmaskBand,maskValue)
-  
-  # done
-  cat(paste(sid,' Done! \n',sep=''))
-  gc()
   return(0)
 }
