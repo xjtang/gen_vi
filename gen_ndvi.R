@@ -40,14 +40,6 @@ library(rgdal)
 
 #--------------------------------------
 
-# Default inputs
-redBand <- 3
-nirBand <- 4
-fmaskBand <- 8
-maskValue <- c(255,2,3,4)
-
-#--------------------------------------
-
 # gen_ndvi
 # Generate NDVI layer based on a specific image stack
 #
@@ -65,7 +57,7 @@ maskValue <- c(255,2,3,4)
 # Usage: 
 #   1.Run the function with correct input arguments.
 #
-gen_ndvi <- function(imgFile,outFile,redBand,nirBand,fmaskBand,maskValue){
+gen_ndvi <- function(imgFile,outFile,redBand=3,nirBand=4,fmaskBand=8,maskValue=c(255,2,3,4)){
   # read in image
   fmaskImg <- raster(imgFile,band=fmaskBand)
   redImg <- raster(imgFile,band=redBand)
