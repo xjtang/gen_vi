@@ -36,7 +36,7 @@
 # Libraries and sourcing
 library(sp)
 library(raster)
-library(rgdal)
+# library(rgdal)
 
 #--------------------------------------
 
