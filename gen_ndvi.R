@@ -104,3 +104,32 @@ gen_ndvi <- function(imgFile,outFile,redBand=3,nirBand=4,fmaskBand=8,maskValue=c
   # done
   return(0)
 }
+
+batch_gen_ndvi <- function(path,pattern='*stack'){
+
+  # check path
+  if(!file.exists(path)){
+    cat('Directory does not exist.\n')
+    return(-1)
+  }
+
+  # refine path
+  if(substr(path,nchar(path),nchar(path))=='/'){
+    path <- substr(path,1,nchar(path)-1)
+  }
+
+  # find all files
+  pattern <- paste(pattern,'*.hdr',sep='')
+  fileList <- list.files(path=path,pattern=pattern,full.names=T,recursive=T)
+  
+  # loop through all files
+  for(i in 1:length(fileList)){
+    inFile <- substr(fileList[i],1,nchar(fileList[i])-4)
+    outFile <- paste(inFile,'_ndvi.tif',sep='')
+    cat(paste('Processing',inFile,'\n'))
+    gen_ndvi(inFile,outFile)
+  }
+
+  # done
+  return(0)
+}
