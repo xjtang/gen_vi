@@ -2,7 +2,7 @@ gen_ndvi
 ========
 
 Generate NDVI in GTiff Format from Landsat SR Stack  
-gen_ndvi(imgFile,outFile,redBand,nirBand,fmaskBand,maskValue)
+gen_ndvi(imgFile,outFile,redBand,nirBand,fmaskBand,maskValue)  
 batch_gen_ndvi(path,pattern)
 
 About
@@ -49,6 +49,6 @@ Requirements:
 
 R (2.15.2 or higher)  
 sp package (1.0-8 or higher)  
-raster package (2.1-16 or higher) 
-rgdal package (0.8-6 or higher)
+raster package (2.1-16 or higher)   
+rgdal package (0.8-6 or higher)  
 
