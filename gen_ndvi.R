@@ -1,11 +1,11 @@
-# gen_ndvi.R
-# Version 1.1
+# gen_vi.R
+# Version 2.0
 # Main Function
 #
 # Project: Landsat Proessing
 # By Xiaojing Tang
 # Created On: Unknown
-# Last Update: 9/12/2014
+# Last Update: 11/18/2014
 #
 # Input Arguments: 
 #   See specific function.
@@ -31,6 +31,9 @@
 # Update of Version 1.1 - 9/12/2014
 #   1.Updated comments
 #
+# Update of Version 2.0 - 11/18/2014
+#   1.Added EVI support
+#
 #----------------------------------------------------------------
 
 # Libraries and sourcing
@@ -41,16 +44,18 @@ library(rgdal)
 
 #--------------------------------------
 
-# gen_ndvi
-# Generate NDVI layer based on a specific image stack
+# gen_vi
+# Generate VI layer based on a specific image stack
 #
 # Input Arguments: 
 #   imgFile (String) - path and file name of the image file that the NDVI is generated from
 #   outFile (String) - path and file name of the output file (include extension .tif)
+#   VI (String) - VI to be calculated
 #   redBand (Integer) - sequence of the red band within the stack (default is 3 for Landsat)
 #   nirBand (Integer) - sequence of the NIR band within the stack (default is 4 for Landsat)
 #   fmaskBand (Integer) - sequence of the fmask band within the stack (default is 8)
 #   maskValue (Vector, Integer) - a set of value that is considere to be masked in the fmask band
+#   bluBand (Integer) - sequence of the blue band within the stack
 #
 # Output Arguments: 
 #   r (Integer) - 0: Successful
@@ -58,11 +63,11 @@ library(rgdal)
 # Usage: 
 #   1.Run the function with correct input arguments.
 #
-gen_ndvi <- function(imgFile,outFile,redBand=3,nirBand=4,fmaskBand=8,maskValue=c(255,2,3,4)){
+gen_vi <- function(imgFile,outFile,VI='ndvi',redBand=3,nirBand=4,fmaskBand=8,maskValue=c(255,2,3,4),bluBand=1){
   # read in image
   fmaskImg <- raster(imgFile,band=fmaskBand)
-  redImg <- raster(imgFile,band=redBand)
-  nirImg <- raster(imgFile,band=nirBand)
+  # redImg <- raster(imgFile,band=redBand)
+  # nirImg <- raster(imgFile,band=nirBand)
   samples <- ncol(fmaskImg)
   lines <- nrow(fmaskImg)
   
@@ -71,16 +76,28 @@ gen_ndvi <- function(imgFile,outFile,redBand=3,nirBand=4,fmaskBand=8,maskValue=c
   nir <- raster::as.matrix(raster(imgFile,band=nirBand))
   red <- raster::as.matrix(raster(imgFile,band=redBand))
     
-  # generate ndvi matrix
-  ndviMtx <- matrix(-9999,lines,samples)
+  # get blue band if calculating evi
+  if(VI=='evi'){
+    # bluImg <- raster(imgFile,band=bluBand)
+    blu <- raster::as.matrix(raster(imgFile,band=bluBand))
+  }
+  
+  # generate vi matrix
+  viMtx <- matrix(-9999,lines,samples)
   pct <- 0
   for(i in 1:lines){
     for(j in 1:samples){
       if(!max(fmask[i,j]==maskValue)){
-        ndviMtx[i,j]<-round(((nir[i,j]-red[i,j])/(nir[i,j]+red[i,j]))*10000)
+        if(VI=='evi'){
+          viMtx[i,j]<-round((2.5*(nir[i,j]-red[i,j])/(nir[i,j]+6*red[i,j]-7.5*blu[i,j]+10000))*10000)
+        }else{
+          viMtx[i,j]<-round(((nir[i,j]-red[i,j])/(nir[i,j]+red[i,j]))*10000)
+        }
+        
       }
     }
     
+    # print progress
     if((floor(i/lines*100)-pct)>=5){
       pct <- floor(i/lines*100)
       cat(paste(pct,'%\n',sep=''))
@@ -88,25 +105,26 @@ gen_ndvi <- function(imgFile,outFile,redBand=3,nirBand=4,fmaskBand=8,maskValue=c
   }
   
   # generate ndvi raster
-  ndviRas <- raster(ndviMtx) 
-  extent(ndviRas) <- extent(fmaskImg)
-  projection(ndviRas) <- projection(fmaskImg)
-  NAvalue(ndviRas) <- -9999
-  res(ndviRas) <- c(30,30)
+  viRas <- raster(viMtx) 
+  extent(viRas) <- extent(fmaskImg)
+  projection(viRas) <- projection(fmaskImg)
+  NAvalue(viRas) <- -9999
+  res(viRas) <- c(30,30)
 
   # write output  
-  writeRaster(ndviRas,filename=outFile,format='GTiff',NAflag=-1,overwrite=T)
+  writeRaster(viRas,filename=outFile,format='GTiff',NAflag=-1,overwrite=T)
   rm(fmask)
   rm(nir)
   rm(red)
-  rm(ndviMtx)
-  rm(ndviRas)
+  rm(viMtx)
+  rm(viRas)
+  gc()
   
   # done
   return(0)
 }
 
-batch_gen_ndvi <- function(path,pattern='*stack'){
+batch_gen_vi <- function(VI='ndvi',path,pattern='*stack'){
 
   # check path
   if(!file.exists(path)){
@@ -126,9 +144,9 @@ batch_gen_ndvi <- function(path,pattern='*stack'){
   # loop through all files
   for(i in 1:length(fileList)){
     inFile <- substr(fileList[i],1,nchar(fileList[i])-4)
-    outFile <- paste(inFile,'_ndvi.tif',sep='')
+    outFile <- paste(inFile,'_',VI,'.tif',sep='')
     cat(paste('Processing',inFile,'\n'))
-    gen_ndvi(inFile,outFile)
+    gen_vi(inFile,outFile,VI)
   }
 
   # done
