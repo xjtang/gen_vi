@@ -15,9 +15,8 @@
 #
 # Usage: 
 #   1.Intstall sp, raster, and rgdal before using this script.
-#   2.Remove the .aux.xml file and keep the .hdr file only before running this script
-#   3.Read the specific manual for the functio that you are trying to use
-#   4.Run either function individually or call them with other script
+#   2.Read the specific manual for the functio that you are trying to use
+#   3.Run either function individually or call them with other script
 #
 # Version 1.0 - 8/27/2013
 #   This script generates NDVI based on preprocessed Landsat image stack
@@ -33,7 +32,8 @@
 #
 # Update of Version 2.0 - 11/18/2014
 #   1.Added EVI support
-#
+#   2.Automatically removes the .aux.xml file
+# 
 #----------------------------------------------------------------
 
 # Libraries and sourcing
@@ -64,6 +64,12 @@ library(rgdal)
 #   1.Run the function with correct input arguments.
 #
 gen_vi <- function(imgFile,outFile,VI='ndvi',redBand=3,nirBand=4,fmaskBand=8,maskValue=c(255,2,3,4),bluBand=1){
+  
+  # remove .aux.xml file
+  if(file.exists(paste(imgFile,'.aux.xml',sep=''))){
+    file.remove(paste(imgFile,'.aux.xml',sep=''))
+  }
+  
   # read in image
   fmaskImg <- raster(imgFile,band=fmaskBand)
   # redImg <- raster(imgFile,band=redBand)
