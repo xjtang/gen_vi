@@ -12,7 +12,7 @@
 #$ -V
 
 # Give this job a name
-#$ -N gen_ndvi
+#$ -N gen_vi
 
 # Join standard output and error to a single file
 #$ -j y
@@ -27,7 +27,7 @@ echo "Starting on : $(date)"
 echo "Running on node : $(hostname)"
 echo "Current directory : $(pwd)"
 echo "Current job ID : $JOB_ID"
-echo "Current job name : $JOB_NAME"
+echo "Current job name : $JOB_NAME $1"
 echo "Task index number : $SGE_TASK_ID"
 echo "=========================================================="
 
@@ -36,7 +36,7 @@ R --slave --vanilla --quiet --no-save  <<EEE
 library('RCurl')
 script <- getURL('https://raw.githubusercontent.com/xjtang/gen_ndvi/master/gen_ndvi.R',ssl.verifypeer=F)
 eval(parse(text=script),envir=.GlobalEnv)
-batch_gen_ndvi('$1','$2')
+batch_gen_vi($1','$2','$3')
 EEE
 
 echo "=========================================================="
