@@ -50,13 +50,13 @@ Input Arguments:
 Example
 --------
 
-gen_vi('C:/LND1999123EDC00stack','C:/LND1999123EDC00.ndvi.tif','evi',3,4,8,c(255,2,3,4),1)  
-gen_vi('C:/LND1999123EDC00stack','C:/LND1999123EDC00.ndvi.tif','ndvi')
+    gen_vi('C:/LND1999123EDC00stack','C:/LND1999123EDC00.ndvi.tif','evi',3,4,8,c(255,2,3,4),1)  
+    gen_vi('C:/LND1999123EDC00stack','C:/LND1999123EDC00.ndvi.tif','ndvi')
 
-batch_gen_vi('ndvi','C:/','*landsat')  
-batch_gen_vi('evi','C:/')  
+    batch_gen_vi('ndvi','C:/','*landsat')  
+    batch_gen_vi('evi','C:/')  
 
-qsh gen_vi.sh 'ndvi' 'C:/' '*stack'  
+    qsh gen_vi.sh 'ndvi' 'C:/' '*stack'  
 
 Requirements:
 --------
