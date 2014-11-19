@@ -3,9 +3,9 @@ gen_vi
 
 Generate Vegetation Index (VI) in GTiff Format from Landsat SR Stack  
 
-genivi(imgFile,outFile,VI,redBand,nirBand,fmaskBand,maskValue,bluBand)  
-batch_gen_vi(VI,path,pattern)  
-gen_vi.sh VI path pattern
+    genivi(imgFile,outFile,VI,redBand,nirBand,fmaskBand,maskValue,bluBand)  
+    batch_gen_vi(VI,path,pattern)  
+    gen_vi.sh VI path pattern
 
 About
 --------
