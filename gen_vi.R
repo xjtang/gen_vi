@@ -34,6 +34,7 @@
 #   1.Added EVI support
 #   2.Automatically removes the .aux.xml file
 # 
+# Created on Github on 10/20/2014, check Github Commits for updates afterwards.
 #----------------------------------------------------------------
 
 # Libraries and sourcing
