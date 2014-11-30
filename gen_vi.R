@@ -131,6 +131,8 @@ gen_vi <- function(imgFile,outFile,VI='ndvi',redBand=3,nirBand=4,fmaskBand=8,mas
   return(0)
 }
 
+#--------------------------------------
+
 batch_gen_vi <- function(VI='ndvi',path,pattern='*stack'){
 
   # check path
