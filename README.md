@@ -1,4 +1,4 @@
-gen_vi ver. 2.1
+gen_vi 2.1
 ========
 
 Generate Vegetation Index (VI) in GTiff Format from Landsat SR Stack  
