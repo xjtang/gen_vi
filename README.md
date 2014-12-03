@@ -1,11 +1,12 @@
-gen_vi
+gen_vi ver. 2.1
 ========
 
 Generate Vegetation Index (VI) in GTiff Format from Landsat SR Stack  
 
-    genivi(imgFile,outFile,VI,redBand,nirBand,fmaskBand,maskValue,bluBand)  
+    gen_vi(imgFile,outFile,VI,redBand,nirBand,fmaskBand,maskValue,bluBand)  
     batch_gen_vi(VI,path,pattern)  
     gen_vi.sh VI path pattern
+    gen_vi_njob.sh VI path pattern njob
 
 About
 --------
@@ -13,6 +14,8 @@ About
 The R script generates vegetation index (VI) such as NDVI (Normalized Difference Vegetation Index) and EVI (Enhanced Vegetation Index) layer based on Landsat surface reflectance data. The Landsat SR data need to be single stack in ENVI format including an additional cloud masking band. The output of the script is a single band raster in GeoTiff format. The resulting NDVI value is multiplied by 10000.
 
 The batch function allows generating VI images for all existing Landsat images in a specific directory. The function searches the input directory and it's sub-directories for ENVI header file (.hdr) with a specific pattern ('*stack' by default). The newly created NDVI image will be named as the original image file appended with '_ndvi(/evi)', and it will be saved in the same directory as the original image.
+
+The new version 2.1 added support for submitting multiple bash jobs for the VI generating process. Input images will be divided evenly accross all jobs. The number of jobs must be less than the total number of images to be processed. The maximum number of jobs that can be submitted depends on the server that you are working on.   
 
 Instruction
 --------
@@ -37,15 +40,24 @@ Input Arguments:
 - VI (String) - the vegetation index to calculate (supports ndvi (default) and evi right now).  
 - path (String) - path of where the program seek for Landsat images.  
 - pattern (String) - pattern based on which the program searches for Landsat images (default is '*stack').  
+- njob (Vector) - [1]:total number of jobs that was submitted; [2]:current job number that is being executed. ([1,1] means single job processing)
 
 Return 0 indicates successful completion.
 
-**For sumbitting qsub jobs, use submit gen_vi.sh with correct inputs.**  
+**For submitting single qsub jobs, submit gen_vi.sh with correct inputs.**  
 
 Input Arguments:
 - VI (String) - the vegetation index to calculate (supports ndvi (default) and evi right now).  
 - path (String) - path of where the program seek for Landsat images.  
 - pattern (String) - pattern based on which the program searches for Landsat images (default is '*stack').  
+
+**For submitting multiple qsub jobs, use gen_vi_njob.sh with correct inputs.**  
+
+Input Arguments:  
+- VI (String) - the vegetation index to calculate (supports ndvi (default) and evi right now).  
+- path (String) - path of where the program seek for Landsat images.  
+- pattern (String) - pattern based on which the program searches for Landsat images (default is '*stack').  
+- njob (Integer) - number of jobs to be submitted (must be less than total number of images to be processed).
 
 Example
 --------
@@ -57,6 +69,8 @@ Example
     batch_gen_vi('evi','C:/')  
 
     qsh gen_vi.sh 'ndvi' 'C:/' '*stack'  
+    
+    gen_vi_njob.sh 'evi' 'C:/' '*stack' 20  
 
 Requirements:
 --------
