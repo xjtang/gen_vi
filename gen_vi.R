@@ -5,7 +5,7 @@
 # Project: Landsat Proessing
 # By Xiaojing Tang
 # Created On: Unknown
-# Last Update: 11/18/2014
+# Last Update: 12/03/2014
 #
 # Input Arguments: 
 #   See specific function.
@@ -28,11 +28,14 @@
 #   NDVI is in integer format multiplied by 10000
 #
 # Update of Version 1.1 - 9/12/2014
-#   1.Updated comments
+#   1.Updated comments.
 #
 # Update of Version 2.0 - 11/18/2014
-#   1.Added EVI support
-#   2.Automatically removes the .aux.xml file
+#   1.Added EVI support.
+#   2.Automatically removes the .aux.xml file.
+#
+# Update of Version 2.1 - 12/03/2004
+#   1.Added support for submitting n jobs to run the program.
 # 
 # Created on Github on 10/20/2014, check Github Commits for updates afterwards.
 #----------------------------------------------------------------
@@ -132,7 +135,7 @@ gen_vi <- function(imgFile,outFile,VI='ndvi',redBand=3,nirBand=4,fmaskBand=8,mas
 
 #--------------------------------------
 
-batch_gen_vi <- function(VI='ndvi',path,pattern='*stack'){
+batch_gen_vi <- function(VI='ndvi',path,pattern='*stack',njob=c(1,1)){
 
   # check path
   if(!file.exists(path)){
@@ -148,6 +151,24 @@ batch_gen_vi <- function(VI='ndvi',path,pattern='*stack'){
   # find all files
   pattern <- paste(pattern,'*.hdr',sep='')
   fileList <- list.files(path=path,pattern=pattern,full.names=T,recursive=T)
+  
+  # divide into parts
+  if((njob[1]>=njob[2])&(njob[2]>0)){
+  
+    % calculate begining and ending
+    total <- length(fileList)
+    piece <- floor(total/njob[1])
+    start <- 1+piece*(njob[2]-1)
+    if(njob[1]>njob[2]){
+        stop = start+piece-1
+    }else{
+        stop = total
+    }
+    
+    % subset file list to be processed
+    fileList = fileList[start:stop]
+      
+  }
   
   # loop through all files
   for(i in 1:length(fileList)){
