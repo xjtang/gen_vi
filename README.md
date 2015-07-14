@@ -72,7 +72,7 @@ Example
     
     gen_vi_njob.sh 'evi' 'C:/' '*stack' 20  
 
-Requirements:
+Dependencies:
 --------
 
 R (2.15.2 or higher)  
