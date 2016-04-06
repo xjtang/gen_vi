@@ -33,11 +33,8 @@ echo "=========================================================="
 
 # Run the bash script
 R --slave --vanilla --quiet --no-save  <<EEE
-library('RCurl')
-script <- getURL('https://raw.githubusercontent.com/xjtang/gen_vi/master/gen_vi.R',ssl.verifypeer=F)
-eval(parse(text=script),envir=.GlobalEnv)
-rm(script)
-batch_gen_vi($1','$2','$3')
+source('/usr3/graduate/xjtang/Documents/gen_vi/gen_vi.R')
+batch_gen_vi('$1','$2','$3')
 EEE
 
 echo "=========================================================="
